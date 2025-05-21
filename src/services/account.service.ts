@@ -9,18 +9,35 @@ import {
 import { encrypt, decrypt, decryptData } from './encryption.service';
 import logger from '../utils/logger';
 
-export const generateAccountNumber = (): string => {
-  // Generate a random 10-digit number
-  return Math.floor(1000000000 + Math.random() * 9000000000).toString();
+export const generateAccountNumber = (phoneNumber: string): string => {
+  // Extract the 2nd and 3rd digits from the phone number
+  const phoneDigits = phoneNumber.replace(/\D/g, ''); // Remove non-digit characters
+  
+  if (phoneDigits.length < 3) {
+    // Fallback if phone number doesn't have enough digits
+    logger.warn(`Phone number ${phoneNumber} doesn't have enough digits, using random prefix`);
+    return Math.floor(1000000000 + Math.random() * 9000000000).toString();
+  }
+  
+  const prefix = phoneDigits.substring(1, 3); // 2nd and 3rd digits
+  
+  // Generate the rest of the account number (8 more digits)
+  const remainingDigits = Math.floor(10000000 + Math.random() * 90000000).toString();
+  
+  return `${prefix}${remainingDigits}`;
 };
 
 export const generateCardNumber = (): string => {
-  // Generate a random 16-digit number
-  let cardNumber = '';
+  // Begin with 5599 as required
+  const prefix = '5599';
+  
+  // Generate the remaining 12 digits (4 groups of 3 digits)
+  let remainingDigits = '';
   for (let i = 0; i < 4; i++) {
-    cardNumber += Math.floor(1000 + Math.random() * 9000).toString();
+    remainingDigits += Math.floor(100 + Math.random() * 900).toString();
   }
-  return cardNumber;
+  
+  return `${prefix}${remainingDigits}`;
 };
 
 export const generateCVV = (): string => {
@@ -84,7 +101,7 @@ export const createAccount = async (accountData: ICreateAccountDto): Promise<{
     }
 
     // Generate account number and card details
-    const accountNumber = generateAccountNumber();
+    const accountNumber = generateAccountNumber(phoneNumber);
     const cardNumber = generateCardNumber();
     const cvv = generateCVV();
     const expiryDate = generateExpiryDate();
