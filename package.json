@@ -2,12 +2,16 @@
   "name": "finable",
   "version": "1.0.0",
   "description": "A financial account creation API",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "nodemon -r dotenv/config src/server.ts"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "keywords": [],
   "author": "",
