@@ -69,7 +69,8 @@ export const createAccount = async (accountData: ICreateAccountDto): Promise<{
       try {
         const decryptedPhone = decrypt(
           JSON.parse(account.phoneNumber as string).encryptedData,
-          JSON.parse(account.phoneNumber as string).iv
+          JSON.parse(account.phoneNumber as string).iv,
+          JSON.parse(account.phoneNumber as string).authTag
         );
         
         if (decryptedPhone === phoneNumber) {
@@ -152,27 +153,32 @@ export const getAccountByNumber = async (accountNumber: string): Promise<{
     // Decrypt sensitive data
     const phoneNumber = decrypt(
       JSON.parse(account.phoneNumber as string).encryptedData, 
-      JSON.parse(account.phoneNumber as string).iv
+      JSON.parse(account.phoneNumber as string).iv,
+      JSON.parse(account.phoneNumber as string).authTag
     );
     
     const dateOfBirth = decrypt(
       JSON.parse(account.dateOfBirth as string).encryptedData, 
-      JSON.parse(account.dateOfBirth as string).iv
+      JSON.parse(account.dateOfBirth as string).iv,
+      JSON.parse(account.dateOfBirth as string).authTag
     );
     
     const cardNumber = decrypt(
       JSON.parse(account.cardDetails.cardNumber as string).encryptedData, 
-      JSON.parse(account.cardDetails.cardNumber as string).iv
+      JSON.parse(account.cardDetails.cardNumber as string).iv,
+      JSON.parse(account.cardDetails.cardNumber as string).authTag
     );
     
     const cvv = decrypt(
       JSON.parse(account.cardDetails.cvv as string).encryptedData, 
-      JSON.parse(account.cardDetails.cvv as string).iv
+      JSON.parse(account.cardDetails.cvv as string).iv,
+      JSON.parse(account.cardDetails.cvv as string).authTag
     );
     
     const expiryDate = decrypt(
       JSON.parse(account.cardDetails.expiryDate as string).encryptedData, 
-      JSON.parse(account.cardDetails.expiryDate as string).iv
+      JSON.parse(account.cardDetails.expiryDate as string).iv,
+      JSON.parse(account.cardDetails.expiryDate as string).authTag
     );
     
     return {
@@ -209,11 +215,11 @@ export const getAllAccounts = async (): Promise<IAccountListResponse[]> => {
         const encryptedExpiryDate = JSON.parse(account.cardDetails.expiryDate as string);
         
         // Decrypt data
-        const phoneNumber = decrypt(encryptedPhoneNumber.encryptedData, encryptedPhoneNumber.iv);
-        const dateOfBirth = decrypt(encryptedDOB.encryptedData, encryptedDOB.iv);
-        const cardNumber = decrypt(encryptedCardNumber.encryptedData, encryptedCardNumber.iv);
-        const cvv = decrypt(encryptedCVV.encryptedData, encryptedCVV.iv);
-        const expiryDate = decrypt(encryptedExpiryDate.encryptedData, encryptedExpiryDate.iv);
+        const phoneNumber = decrypt(encryptedPhoneNumber.encryptedData, encryptedPhoneNumber.iv, encryptedPhoneNumber.authTag);
+        const dateOfBirth = decrypt(encryptedDOB.encryptedData, encryptedDOB.iv, encryptedDOB.authTag);
+        const cardNumber = decrypt(encryptedCardNumber.encryptedData, encryptedCardNumber.iv, encryptedCardNumber.authTag);
+        const cvv = decrypt(encryptedCVV.encryptedData, encryptedCVV.iv, encryptedCVV.authTag);
+        const expiryDate = decrypt(encryptedExpiryDate.encryptedData, encryptedExpiryDate.iv, encryptedExpiryDate.authTag);
         
         accountListResponses.push({
           fullName: `${account.firstName} ${account.surname}`,
