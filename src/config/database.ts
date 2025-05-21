@@ -4,6 +4,9 @@ import logger from '../utils/logger';
 
 const connectDB = async (): Promise<void> => {
   try {
+    if (!config.mongoUri) {
+      throw new Error('MONGO_URI is not defined in the environment variables');
+    }
     await mongoose.connect(config.mongoUri);
     logger.info('MongoDB connected successfully');
   } catch (error) {
