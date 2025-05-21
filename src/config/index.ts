@@ -6,7 +6,7 @@ dotenv.config();
 const config = {
   env: process.env.NODE_ENV || 'development',
   port: process.env.PORT || 3000,
-  mongoUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/bankingApi',
+  mongoUri: process.env.MONGODB_URI,
   encryptionKey: process.env.ENCRYPTION_KEY,
   logLevel: process.env.LOG_LEVEL || 'info',
 };
