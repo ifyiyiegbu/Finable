@@ -9,7 +9,7 @@ class AppError extends Error implements IAppError {
 
   constructor(message: string, statusCode: number, isOperational = true, stack = '') {
     super(message);
-    this.name = 'AppError'; // Sets the error name
+    this.name = 'AppError';
     this.statusCode = statusCode;
     this.isOperational = isOperational;
     
@@ -19,7 +19,6 @@ class AppError extends Error implements IAppError {
       Error.captureStackTrace(this, this.constructor);
     }
   }
-    name: string;
 }
 
 export const errorHandler = (
