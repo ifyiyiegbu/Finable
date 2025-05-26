@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finable API</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💳</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            line-height: 1.6;
+            padding: 1rem;
+        }
+        
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #2ecc71;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 5px #2ecc71; }
+            to { box-shadow: 0 0 20px #2ecc71; }
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .endpoints {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        
+        .endpoints h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .endpoint {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .endpoint:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-right: 1rem;
+        }
+        
+        .get { background: #27ae60; color: white; }
+        .post { background: #e74c3c; color: white; }
+        
+        .url {
+            font-family: 'Courier New', monospace;
+            background: #ecf0f1;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            color: #2c3e50;
+        }
+        
+        .description {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ecf0f1;
+            color: #95a5a6;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        }
+        
+        .api-tester {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        
+        .api-tester h3 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        
+        .test-form {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .test-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .test-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .features, .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .test-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">💳 Finable</div>
+        <h1>Financial Account Management API</h1>
+        <p class="subtitle">Secure account creation and management with enterprise-grade encryption</p>
+        
+        <div class="status">
+            <span>🟢</span>
+            <span>API Online & Secure</span>
+        </div>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number" id="uptime">Loading...</div>
+                <div class="stat-label">Uptime (seconds)</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">AES-256</div>
+                <div class="stat-label">GCM Encryption</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">v1.0.0</div>
+                <div class="stat-label">API Version</div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🔐</div>
+                <h3>Military-Grade Security</h3>
+                <p>AES-256-GCM encryption with field-level protection for all sensitive data</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>High Performance</h3>
+                <p>Optimized Express.js API with MongoDB for lightning-fast operations</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Complete Audit Trail</h3>
+                <p>Comprehensive Winston logging with request tracking and error monitoring</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🛡️</div>
+                <h3>Enterprise Ready</h3>
+                <p>Rate limiting, CORS protection, and security headers for production use</p>
+            </div>
+        </div>
+        
+        <div class="endpoints">
+            <h2>📋 API Endpoints</h2>
+            
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code class="url">/api/accounts</code>
+                <div class="description">Create a new financial account with automatic card generation and encryption</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code class="url">/api/accounts/:accountNumber</code>
+                <div class="description">Retrieve complete account details with decrypted sensitive information</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code class="url">/api/accounts</code>
+                <div class="description">List all accounts with both encrypted and decrypted data views</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code class="url">/api/accounts/decrypt</code>
+                <div class="description">Standalone decryption service for encrypted data objects</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code class="url">/health</code>
+                <div class="description">System health monitoring with uptime and environment info</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code class="url">/api/info</code>
+                <div class="description">API information and available endpoints in JSON format</div>
+            </div>
+        </div>
+        
+        <div class="api-tester">
+            <h3>🧪 Quick API Test</h3>
+            <p>Test the health endpoint directly from this page:</p>
+            <div class="test-form">
+                <button class="btn btn-secondary" onclick="testHealthEndpoint()">Test Health Endpoint</button>
+                <button class="btn btn-secondary" onclick="testAccountsEndpoint()">List Accounts</button>
+            </div>
+            <div class="test-result" id="testResult">
+                <h4>API Response:</h4>
+                <pre id="responseData"></pre>
+            </div>
+        </div>
+        
+        <div>
+            <a href="/health" class="btn">🏥 Health Check</a>
+            <a href="/api/accounts" class="btn">📝 View Accounts</a>
+            <a href="/api/info" class="btn">ℹ️ API Info</a>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Finable API v1.0.0</strong></p>
+            <p>Built with Node.js, Express, TypeScript & MongoDB</p>
+            <p>Environment: <strong>{{NODE_ENV}}</strong> | Port: <strong>{{PORT}}</strong></p>
+            <p>© 2025 Finable - Secure Financial Account Management</p>
+        </div>
+    </div>
+
+    <script>
+        // Update uptime periodically
+        function updateUptime() {
+            fetch('/health')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.uptime) {
+                        document.getElementById('uptime').textContent = Math.floor(data.uptime);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching uptime:', error);
+                });
+        }
+
+        // Test health endpoint
+        function testHealthEndpoint() {
+            const resultDiv = document.getElementById('testResult');
+            const responseData = document.getElementById('responseData');
+            
+            resultDiv.style.display = 'block';
+            responseData.textContent = 'Loading...';
+            
+            fetch('/health')
+                .then(response => response.json())
+                .then(data => {
+                    responseData.textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    responseData.textContent = 'Error: ' + error.message;
+                });
+        }
+
+        // Test accounts endpoint
+        function testAccountsEndpoint() {
+            const resultDiv = document.getElementById('testResult');
+            const responseData = document.getElementById('responseData');
+            
+            resultDiv.style.display = 'block';
+            responseData.textContent = 'Loading...';
+            
+            fetch('/api/accounts')
+                .then(response => response.json())
+                .then(data => {
+                    responseData.textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    responseData.textContent = 'Error: ' + error.message;
+                });
+        }
+
+        // Initialize
+        updateUptime();
+        setInterval(updateUptime, 30000); // Update every 30 seconds
+    </script>
+</body>
+</html>
